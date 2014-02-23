@@ -1,7 +1,5 @@
 <?php
-
-$start = microtime(true);
-
+ini_set('xdebug.max_nesting_level', 200);
 // Quick Sort!
 // Characteristics:
 // Worst case performance: O(n^2)
@@ -28,9 +26,21 @@ function quickSort($array){
 	}
 
 	//Select pivot element
-	$pivotIx = mt_rand(0,$length-1);
-	$pivot = $array[$pivotIx]; //rand() is slower than mt_rand()! Uses the Mersenne Twister algorithm
-	unset($array[$pivotIx]);
+	//-randomly
+	//-Sedgewick method
+	//-middle
+	
+	//Random (make sure to add $pivot back into the return so that the pivot value is preserved!)
+	// $pivotIx = mt_rand(0,$length-1); //rand() is slower than mt_rand()! Uses the Mersenne Twister algorithm
+	// $pivot = $array[$pivotIx]; 
+	// unset($array[$pivotIx]);
+
+	//Middle (make sure to add $pivot back into the return so that the pivot value is preserved!)
+	// $pivot = $array[round(($length-1)/2)];
+	// unset($array[$pivotIx]);
+
+	//Sedgewick method
+	$pivot = ($array[0] + $array[round(($length-1)/2)] + $array[$length-1])/3;
 
 	$less = $greater = array();
 	foreach($array as $k=>$v){
@@ -42,10 +52,15 @@ function quickSort($array){
 	}
 
 	//Do this recursively for each subset of the array
-	return array_merge(quickSort($less), array($pivot), quickSort($greater));	
+	return array_merge(quickSort($less), quickSort($greater));	
 }
 
-$array = array(1,3,2,5,5,7,8,2,1,39,6,8,1,2,6,8,9,2,4,5,76);
+// Generate array of random numbers between 1 and 10,000
+for($i=0; $i<100; $i++){
+	$array[] = mt_rand(1, 10000);
+}
+
+$start = microtime(true);
 
 $sorted = quickSort($array);
 
@@ -55,9 +70,27 @@ echo "The sorted array:";
 var_dump($sorted);
 
 $memoryPeak = memory_get_peak_usage();
-echo "The peak memory usage: $memoryPeak\n";
+echo "The peak memory usage: $memoryPeak bytes\n";
 
 $timeElapsed = microtime(true) - $start;
-echo "The time (in seconds) for the script to run: $timeElapsed\n";
+echo "The time (in seconds) for the script to run: $timeElapsed seconds\n";
+
+if(verifySort($sorted)){
+	echo 'The array is sorted in ascending order.';
+}
+
+function verifySort($array){
+	foreach($array as $k=>$v){
+		if($k==count($array)-1){
+			break;
+		}
+
+		if($array[$k]>$array[$k+1]){
+			return false;
+		}
+	}
+
+	return true;
+}
 
  ?>
