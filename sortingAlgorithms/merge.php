@@ -1,4 +1,5 @@
 <?php
+include 'verifySort.php';
 
 function mergeSort($arrayToSort){
 	$arrSize = count($arrayToSort);
@@ -30,19 +31,33 @@ function merge($lFrag, $rFrag){
 		}
 	}
 
-	if(count($lFrag)>0){
-		$mergedArr = array_merge($mergedArr, $lFrag);
-	}
-	if(count($rFrag)>0){
-		$mergedArr = array_merge($mergedArr, $rFrag);
-	}
+	$mergedArr = array_merge($mergedArr, $lFrag);
+	$mergedArr = array_merge($mergedArr, $rFrag);
 
 	return $mergedArr;
 }
 
-$test = array(3, 2, 1, 4,5,7,2,1,3,55,6,1,7,3,2,3,41,23);
-$array = mergeSort($test);
-// echo 'output';
-print_r($array);
+// Generate array of random numbers between 1 and 10,000
+for($i=0; $i<100; $i++){
+	$array[] = mt_rand(1, 10000);
+}
 
+$start = microtime(true);
+
+$sorted = mergeSort($array);
+
+echo "The unsorted array:";
+var_dump($array);
+echo "The sorted array:";
+var_dump($sorted);
+
+$memoryPeak = memory_get_peak_usage();
+echo "The peak memory usage: $memoryPeak bytes\n";
+
+$timeElapsed = microtime(true) - $start;
+echo "The time (in seconds) for the script to run: $timeElapsed seconds\n";
+
+if(verifySort($sorted)){
+	echo 'The array is sorted in ascending order.';
+}
 ?>

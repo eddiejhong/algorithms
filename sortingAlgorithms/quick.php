@@ -1,4 +1,6 @@
 <?php
+include 'verifySort.php';
+
 ini_set('xdebug.max_nesting_level', 200);
 // Quick Sort!
 // Characteristics:
@@ -77,20 +79,6 @@ echo "The time (in seconds) for the script to run: $timeElapsed seconds\n";
 
 if(verifySort($sorted)){
 	echo 'The array is sorted in ascending order.';
-}
-
-function verifySort($array){
-	foreach($array as $k=>$v){
-		if($k==count($array)-1){
-			break;
-		}
-
-		if($array[$k]>$array[$k+1]){
-			return false;
-		}
-	}
-
-	return true;
 }
 
  ?>
